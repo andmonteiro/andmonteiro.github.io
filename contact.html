@@ -1,11 +1,81 @@
 ---
 layout: page
-title: Contact Me
-description: Have questions? I have answers.
+title: Contato
+description: 
 background: '/img/bg-contact.jpg'
 form: true
 ---
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <ul class="list-inline text-center">
+        {% if site.email %}
+        <li class="list-inline-item">
+          <p>Email</p>
+          <a href="mailto:{{ site.email | encode_email }}">
+            <span class="fa-stack fa-lg">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="far fa-envelope fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </li>
+        {% endif %}
+        {% if site.twitter_username %}
+        <li class="list-inline-item">
+          <a href="https://twitter.com/{{ site.twitter_username }}">
+            <span class="fa-stack fa-lg">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </li>
+        {% endif %}
+        {% if site.facebook_username %}
+        <li class="list-inline-item">
+          <a href="https://www.facebook.com/{{ site.facebook_username }}">
+            <span class="fa-stack fa-lg">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </li>
+        {% endif %}
+        {% if site.linkedin_username %}
+        <li class="list-inline-item">
+          <p>Linkedin</p>
+          <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}">
+            <span class="fa-stack fa-lg">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </li>
+        {% endif %}
+        {% if site.github_username %}
+        <li class="list-inline-item">
+          <p>Github</p>
+          <a href="https://github.com/{{ site.github_username }}">
+            <span class="fa-stack fa-lg">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </li>
+        {% endif %}
+        {% if site.instagram_username %}
+        <li class="list-inline-item">
+          <a href="https://instagram.com/{{ site.instagram_username }}">
+            <span class="fa-stack fa-lg">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
 
+<!--
 <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
 <form name="sentMessage" id="contactForm" novalidate>
   <div class="control-group">
@@ -42,3 +112,4 @@ form: true
     <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
   </div>
 </form>
+ -->
