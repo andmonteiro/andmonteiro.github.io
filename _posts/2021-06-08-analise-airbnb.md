@@ -2,7 +2,7 @@
 layout: post
 title: "Análise dos Dados do Airbnb"
 subtitle: "Neste notebook, iremos analisar os dados referentes ao Distrito de Lisboa, e ver quais insights podem ser extraídos a partir de dados brutos."
-background: '/img/posts/analise-airbnb/01.jpeg'
+background: '/img/posts/analise-airbnb/analise-airbnb.jpeg'
 ---
 # Análise dos Dados do Airbnb - *Lisboa, Portugal*
 

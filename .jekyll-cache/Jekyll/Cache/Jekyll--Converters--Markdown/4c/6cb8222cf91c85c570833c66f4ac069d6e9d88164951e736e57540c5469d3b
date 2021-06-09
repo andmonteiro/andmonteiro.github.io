@@ -1,0 +1,1510 @@
+I"<h1 id="panorama-da-covid-19-no-brasil"><strong>Panorama da COVID-19 no Brasil</strong></h1>
+
+<p>A COVID-19 é uma doença causada pelo coronavírus, denominado SARS-CoV-2, que apresenta um espectro clínico variando de infecções assintomáticas a quadros graves. De acordo com a Organização Mundial de Saúde, a maioria (cerca de 80%) dos pacientes com COVID-19 podem ser assintomáticos ou oligossintomáticos (poucos sintomas), e aproximadamente 20% dos casos detectados requer atendimento hospitalar por apresentarem dificuldade respiratória, dos quais aproximadamente 5% podem necessitar de suporte ventilatório.</p>
+
+<p>Transmitido principalmente por meio de gotículas provenientes de tosses ou espirros de pessoas infectadas, a gravidade dos sintomas varia muito de pessoa para pessoa.</p>
+
+<center><img alt="Colaboratory logo" width="50%" src="https://image.freepik.com/free-vector/virus-disinfection-concept_23-2148477224.jpg" /></center>
+
+<p>Com o objetivo de elevar a consciência situacional a respeito da COVID-19 no Brasil e no Mundo, irei realizar uma análise sobre os dados públicos da doença.</p>
+
+<h2 id="obtenção-dos-dados"><strong>Obtenção dos Dados</strong></h2>
+
+<p>Será utilizado como fonte dos dados o site <a href="https://ourworldindata.org/coronavirus">Our World In Data</a>, especializado em expor pesquisas empíricas e dados analíticos dos mais diversos assuntos ao redor do mundo.
+Os dados do site são atualizados diariamente, ou seja, haverá alterações no decorrer do estudo, pois, no momento da criação deste notebook, os dados foram extraídos no dia 29 de julho de 2020.</p>
+
+<h3 id="dicionário-de-variáveis"><strong>Dicionário de Variáveis</strong></h3>
+<p>Para se ter uma melhor compreensão das variáveis utilizadas, abaixo um dicionário contendo a descrição de cada uma delas:</p>
+
+<p><code class="language-plaintext highlighter-rouge">iso-code</code> - Código de 3 letras de um determinado país.</p>
+
+<p><code class="language-plaintext highlighter-rouge">continent</code> - Continente do país.</p>
+
+<p><code class="language-plaintext highlighter-rouge">location</code> - Nome do país.</p>
+
+<p><code class="language-plaintext highlighter-rouge">date</code> - Data da observação.</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_cases</code> - Total de casos confirmados de COVID-19.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_cases</code> - Novos casos confirmados de COVID-19.</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_deaths</code> - Total de mortes atribuidas ao COVID-19.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_deaths</code> - Novas mortas atribuidas ao COVID-19.</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_cases_per_million</code> - Total de casos confirmados de COVID-19 por 1,000,000 de pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_cases_per_million</code> - Novos casos confirmados de COVID-19 por 1,000,000 de pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_deaths_per_million</code> - Total de mortes atribuidas ao COVID-19 por 1,000,000 de pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_deaths_per_million</code> - Novas mortes atribuidas ao COVID-19 por 1,000,000 de pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_tests</code> - Total de testes para COVID-19.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_tests</code> - Novos testes para COVID-19.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_tests_smoothed</code> - Novos testes para COVID-19(7 dias suavizado). Para países que não reportam os dados do teste diariamente, assumimos que o teste mudou igualmente diariamente em qualquer período em que nenhum dado foi relatado. Isso produz uma série completa de números diários, que são calculados como média em uma janela de 7 dias consecutivos.</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_tests_per_thousand</code> - Total de testes para COVID-19 por 1,000 pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_tests_per_thousand</code> - Novos testes para COVID-19 por 1,000 pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">new_tests_smoothed_per_thousand</code> - Novos testes para COVID-19(7 dias suavizado) por 1,000 pessoas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">tests_units</code> - Unidades usadas pelo local para relatar seus dados de teste.</p>
+
+<p><code class="language-plaintext highlighter-rouge">stringency_index</code> - Índice de estresse da resposta do governo: medida composta baseada em 9 indicadores de resposta, incluindo fechamento de escolas, fechamento de locais de trabalho e proibições de viagens, redimensionados para um valor de 0 a 100 (100 = resposta mais estrita).</p>
+
+<p><code class="language-plaintext highlighter-rouge">population</code> - População em 2020.</p>
+
+<p><code class="language-plaintext highlighter-rouge">population_density</code> - Número de pessoas divididas por área terrestre, medida em quilômetros quadrados, no ano mais recente disponível.</p>
+
+<p><code class="language-plaintext highlighter-rouge">median_age</code> - Idade média da população, projeção da ONU para 2020.</p>
+
+<p><code class="language-plaintext highlighter-rouge">aged_65_older</code> - Proporção da população com 65 anos ou mais, ano mais recente disponível.</p>
+
+<p><code class="language-plaintext highlighter-rouge">aged_70_older</code> - Percentagem da população com 70 anos ou mais em 2015.</p>
+
+<p><code class="language-plaintext highlighter-rouge">gdp_per_capita</code> - Produto interno bruto com paridade do poder de compra (dólares internacionais constantes de 2011), último ano disponível.</p>
+
+<p><code class="language-plaintext highlighter-rouge">extreme_poverty</code> - Percentagem da população que vive em extrema pobreza, último ano disponível desde 2010.</p>
+
+<p><code class="language-plaintext highlighter-rouge">cardiovasc_death_rate</code> - Taxa de mortalidade por doenças cardiovasculares em 2017.</p>
+
+<p><code class="language-plaintext highlighter-rouge">diabetes_prevalence</code> - Prevalência de diabetes (% da população entre 20 e 79 anos) em 2017.</p>
+
+<p><code class="language-plaintext highlighter-rouge">female_smokers</code> - Percentagem de mulheres que fumam, último ano disponível.</p>
+
+<p><code class="language-plaintext highlighter-rouge">male_smokers</code> - Proporção de homens que fumam, último ano disponível.</p>
+
+<p><code class="language-plaintext highlighter-rouge">handwashing_facilities</code> - Proporção da população com instalações básicas de lavagem das mãos nas instalações, último ano disponível.</p>
+
+<p><code class="language-plaintext highlighter-rouge">hospital_beds_per_thousand</code> - Camas de hospital por 1.000 pessoas, último ano disponível desde 2010.</p>
+
+<p><code class="language-plaintext highlighter-rouge">life_expectancy</code> - Expectativa de vida no nascimento em 2019.</p>
+
+<h3 id="importando-os-dados-da-covid-19"><strong>Importando os dados da COVID-19</strong></h3>
+
+<p>Iremos utilizar o repositório do Github que é atualizado diariamente <a href="https://github.com/owid/covid-19-data/tree/master/public/data">https://github.com/owid/covid-19-data/tree/master/public/data</a> e usaremos o formato <code class="language-plaintext highlighter-rouge">csv</code> neste projeto.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># importar as bibliotecas necessárias
+</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+
+<span class="c1"># importar o dataset para um DataFrame
+</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"https://covid.ourworldindata.org/data/owid-covid-data.csv"</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h2 id="análise-exploratória-dos-dados">Análise Exploratória dos Dados</h2>
+
+<p>Iremos conhecer agora como os dados foram estruturados, e se tiver a necessidade tratar suas colunas e apresentar algumas informações. Lembrando que o dataset utilizado está atualizado até a data que foi feita essa análise, dia 29 de julho de 2020.</p>
+
+<h3 id="análise-exploratória-inicial">Análise Exploratória Inicial</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># visualizar as 5 primeiras entradas
+</span><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iso_code</th>
+      <th>continent</th>
+      <th>location</th>
+      <th>date</th>
+      <th>total_cases</th>
+      <th>new_cases</th>
+      <th>total_deaths</th>
+      <th>new_deaths</th>
+      <th>total_cases_per_million</th>
+      <th>new_cases_per_million</th>
+      <th>total_deaths_per_million</th>
+      <th>new_deaths_per_million</th>
+      <th>new_tests</th>
+      <th>total_tests</th>
+      <th>total_tests_per_thousand</th>
+      <th>new_tests_per_thousand</th>
+      <th>new_tests_smoothed</th>
+      <th>new_tests_smoothed_per_thousand</th>
+      <th>tests_units</th>
+      <th>stringency_index</th>
+      <th>population</th>
+      <th>population_density</th>
+      <th>median_age</th>
+      <th>aged_65_older</th>
+      <th>aged_70_older</th>
+      <th>gdp_per_capita</th>
+      <th>extreme_poverty</th>
+      <th>cardiovasc_death_rate</th>
+      <th>diabetes_prevalence</th>
+      <th>female_smokers</th>
+      <th>male_smokers</th>
+      <th>handwashing_facilities</th>
+      <th>hospital_beds_per_thousand</th>
+      <th>life_expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AFG</td>
+      <td>Asia</td>
+      <td>Afghanistan</td>
+      <td>2019-12-31</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>38928341.0</td>
+      <td>54.422</td>
+      <td>18.6</td>
+      <td>2.581</td>
+      <td>1.337</td>
+      <td>1803.987</td>
+      <td>NaN</td>
+      <td>597.029</td>
+      <td>9.59</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>37.746</td>
+      <td>0.5</td>
+      <td>64.83</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AFG</td>
+      <td>Asia</td>
+      <td>Afghanistan</td>
+      <td>2020-01-01</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>38928341.0</td>
+      <td>54.422</td>
+      <td>18.6</td>
+      <td>2.581</td>
+      <td>1.337</td>
+      <td>1803.987</td>
+      <td>NaN</td>
+      <td>597.029</td>
+      <td>9.59</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>37.746</td>
+      <td>0.5</td>
+      <td>64.83</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AFG</td>
+      <td>Asia</td>
+      <td>Afghanistan</td>
+      <td>2020-01-02</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>38928341.0</td>
+      <td>54.422</td>
+      <td>18.6</td>
+      <td>2.581</td>
+      <td>1.337</td>
+      <td>1803.987</td>
+      <td>NaN</td>
+      <td>597.029</td>
+      <td>9.59</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>37.746</td>
+      <td>0.5</td>
+      <td>64.83</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AFG</td>
+      <td>Asia</td>
+      <td>Afghanistan</td>
+      <td>2020-01-03</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>38928341.0</td>
+      <td>54.422</td>
+      <td>18.6</td>
+      <td>2.581</td>
+      <td>1.337</td>
+      <td>1803.987</td>
+      <td>NaN</td>
+      <td>597.029</td>
+      <td>9.59</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>37.746</td>
+      <td>0.5</td>
+      <td>64.83</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AFG</td>
+      <td>Asia</td>
+      <td>Afghanistan</td>
+      <td>2020-01-04</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>38928341.0</td>
+      <td>54.422</td>
+      <td>18.6</td>
+      <td>2.581</td>
+      <td>1.337</td>
+      <td>1803.987</td>
+      <td>NaN</td>
+      <td>597.029</td>
+      <td>9.59</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>37.746</td>
+      <td>0.5</td>
+      <td>64.83</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># visualizar as 5 ultimas linhas
+</span><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iso_code</th>
+      <th>continent</th>
+      <th>location</th>
+      <th>date</th>
+      <th>total_cases</th>
+      <th>new_cases</th>
+      <th>total_deaths</th>
+      <th>new_deaths</th>
+      <th>total_cases_per_million</th>
+      <th>new_cases_per_million</th>
+      <th>total_deaths_per_million</th>
+      <th>new_deaths_per_million</th>
+      <th>new_tests</th>
+      <th>total_tests</th>
+      <th>total_tests_per_thousand</th>
+      <th>new_tests_per_thousand</th>
+      <th>new_tests_smoothed</th>
+      <th>new_tests_smoothed_per_thousand</th>
+      <th>tests_units</th>
+      <th>stringency_index</th>
+      <th>population</th>
+      <th>population_density</th>
+      <th>median_age</th>
+      <th>aged_65_older</th>
+      <th>aged_70_older</th>
+      <th>gdp_per_capita</th>
+      <th>extreme_poverty</th>
+      <th>cardiovasc_death_rate</th>
+      <th>diabetes_prevalence</th>
+      <th>female_smokers</th>
+      <th>male_smokers</th>
+      <th>handwashing_facilities</th>
+      <th>hospital_beds_per_thousand</th>
+      <th>life_expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>33412</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>International</td>
+      <td>2020-02-28</td>
+      <td>705.0</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>33413</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>International</td>
+      <td>2020-02-29</td>
+      <td>705.0</td>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>2.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>33414</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>International</td>
+      <td>2020-03-01</td>
+      <td>705.0</td>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>33415</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>International</td>
+      <td>2020-03-02</td>
+      <td>705.0</td>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>33416</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>International</td>
+      <td>2020-03-10</td>
+      <td>696.0</td>
+      <td>-9.0</td>
+      <td>7.0</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># visualizar o tamanho do Dataframe
+</span><span class="n">df</span><span class="p">.</span><span class="n">shape</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(33417, 34)
+</code></pre></div></div>
+
+<p>Há 31704 linhas e 34 colunas.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># visualizar as colunas
+</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Index(['iso_code', 'continent', 'location', 'date', 'total_cases', 'new_cases',
+       'total_deaths', 'new_deaths', 'total_cases_per_million',
+       'new_cases_per_million', 'total_deaths_per_million',
+       'new_deaths_per_million', 'new_tests', 'total_tests',
+       'total_tests_per_thousand', 'new_tests_per_thousand',
+       'new_tests_smoothed', 'new_tests_smoothed_per_thousand', 'tests_units',
+       'stringency_index', 'population', 'population_density', 'median_age',
+       'aged_65_older', 'aged_70_older', 'gdp_per_capita', 'extreme_poverty',
+       'cardiovasc_death_rate', 'diabetes_prevalence', 'female_smokers',
+       'male_smokers', 'handwashing_facilities', 'hospital_beds_per_thousand',
+       'life_expectancy'],
+      dtype='object')
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># visualizar os tipos das variáveis
+</span><span class="n">df</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iso_code                            object
+continent                           object
+location                            object
+date                                object
+total_cases                        float64
+new_cases                          float64
+total_deaths                       float64
+new_deaths                         float64
+total_cases_per_million            float64
+new_cases_per_million              float64
+total_deaths_per_million           float64
+new_deaths_per_million             float64
+new_tests                          float64
+total_tests                        float64
+total_tests_per_thousand           float64
+new_tests_per_thousand             float64
+new_tests_smoothed                 float64
+new_tests_smoothed_per_thousand    float64
+tests_units                         object
+stringency_index                   float64
+population                         float64
+population_density                 float64
+median_age                         float64
+aged_65_older                      float64
+aged_70_older                      float64
+gdp_per_capita                     float64
+extreme_poverty                    float64
+cardiovasc_death_rate              float64
+diabetes_prevalence                float64
+female_smokers                     float64
+male_smokers                       float64
+handwashing_facilities             float64
+hospital_beds_per_thousand         float64
+life_expectancy                    float64
+dtype: object
+</code></pre></div></div>
+
+<p>Nessa verificação dos tipos de variáveis, podemos verificar que a coluna Date está como tipo object, vamos fazer o tratamento da mesma e alterá-la para o tipo data para melhor manipulação.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#transformar o tipo da variavel date para o tipo datetime
+</span><span class="n">df</span><span class="p">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">date</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iso_code                                   object
+continent                                  object
+location                                   object
+date                               datetime64[ns]
+total_cases                               float64
+new_cases                                 float64
+total_deaths                              float64
+new_deaths                                float64
+total_cases_per_million                   float64
+new_cases_per_million                     float64
+total_deaths_per_million                  float64
+new_deaths_per_million                    float64
+new_tests                                 float64
+total_tests                               float64
+total_tests_per_thousand                  float64
+new_tests_per_thousand                    float64
+new_tests_smoothed                        float64
+new_tests_smoothed_per_thousand           float64
+tests_units                                object
+stringency_index                          float64
+population                                float64
+population_density                        float64
+median_age                                float64
+aged_65_older                             float64
+aged_70_older                             float64
+gdp_per_capita                            float64
+extreme_poverty                           float64
+cardiovasc_death_rate                     float64
+diabetes_prevalence                       float64
+female_smokers                            float64
+male_smokers                              float64
+handwashing_facilities                    float64
+hospital_beds_per_thousand                float64
+life_expectancy                           float64
+dtype: object
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># verificar valores ausentes
+</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">isnull</span><span class="p">().</span><span class="nb">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>new_tests_per_thousand             0.688751
+new_tests                          0.688751
+total_tests_per_thousand           0.681390
+total_tests                        0.681390
+new_tests_smoothed_per_thousand    0.655265
+new_tests_smoothed                 0.655265
+tests_units                        0.632283
+handwashing_facilities             0.588114
+extreme_poverty                    0.405542
+male_smokers                       0.294042
+female_smokers                     0.285483
+stringency_index                   0.188138
+hospital_beds_per_thousand         0.181465
+aged_65_older                      0.113086
+gdp_per_capita                     0.110991
+aged_70_older                      0.104677
+median_age                         0.100039
+cardiovasc_death_rate              0.099770
+diabetes_prevalence                0.069216
+population_density                 0.045097
+life_expectancy                    0.013945
+new_deaths_per_million             0.012539
+total_deaths_per_million           0.012539
+new_cases_per_million              0.012539
+total_cases_per_million            0.012539
+new_deaths                         0.010623
+total_deaths                       0.010623
+new_cases                          0.010623
+total_cases                        0.010623
+continent                          0.008259
+population                         0.001915
+iso_code                           0.001915
+date                               0.000000
+location                           0.000000
+dtype: float64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver para a data mais atual, quais os 5 países que tem mais casos
+</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span> <span class="o">==</span> <span class="s">'2020-07-29'</span><span class="p">,</span> <span class="p">[</span><span class="s">'location'</span><span class="p">,</span> <span class="s">'total_cases'</span><span class="p">]].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">"total_cases"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>location</th>
+      <th>total_cases</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>31785</th>
+      <td>United States</td>
+      <td>4351997.0</td>
+    </tr>
+    <tr>
+      <th>4521</th>
+      <td>Brazil</td>
+      <td>2483191.0</td>
+    </tr>
+    <tr>
+      <th>14203</th>
+      <td>India</td>
+      <td>1531669.0</td>
+    </tr>
+    <tr>
+      <th>25210</th>
+      <td>Russia</td>
+      <td>823515.0</td>
+    </tr>
+    <tr>
+      <th>27706</th>
+      <td>South Africa</td>
+      <td>459761.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver para a data mais atual, quais os 5 países que tem mais mortes
+</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span><span class="o">==</span><span class="s">'2020-07-29'</span><span class="p">,</span> <span class="p">[</span><span class="s">'location'</span><span class="p">,</span> <span class="s">'total_deaths'</span><span class="p">]].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">"total_deaths"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>location</th>
+      <th>total_deaths</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>31785</th>
+      <td>United States</td>
+      <td>149256.0</td>
+    </tr>
+    <tr>
+      <th>4521</th>
+      <td>Brazil</td>
+      <td>88539.0</td>
+    </tr>
+    <tr>
+      <th>31573</th>
+      <td>United Kingdom</td>
+      <td>45878.0</td>
+    </tr>
+    <tr>
+      <th>19953</th>
+      <td>Mexico</td>
+      <td>44876.0</td>
+    </tr>
+    <tr>
+      <th>15595</th>
+      <td>Italy</td>
+      <td>35123.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>###Plotagem de Gráficos</p>
+
+<p>Vamos plotar gráficos para melhor visualização dos dados:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plotar gráfico dos 5 primeiros países com o maior número de casos
+</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">top5_cases</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span><span class="o">==</span><span class="s">'2020-07-29'</span><span class="p">,[</span><span class="s">'location'</span><span class="p">,</span> <span class="s">'total_cases'</span><span class="p">]].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'total_cases'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'location'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'total_cases'</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">top5_cases</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"b"</span><span class="p">)</span>
+
+<span class="c1">#formatar o ax
+</span><span class="n">ax</span><span class="p">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s">'plain'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"País"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Número de Casos"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Países com o maior número de casos de COVID-19"</span><span class="p">)</span>
+
+<span class="c1">#inserir o valor acima de cada barra
+</span><span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top5_cases</span><span class="p">[</span><span class="s">'total_cases'</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">index</span> <span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">'center'</span><span class="p">,</span><span class="n">verticalalignment</span><span class="o">=</span><span class="s">'bottom'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p><img src="/img\posts\analise-covid\output_18_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plotar gráfico dos 5 primeiros países com o maior numero de mortes
+</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">top5_deaths</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span><span class="o">==</span><span class="s">'2020-07-29'</span><span class="p">,[</span><span class="s">'location'</span><span class="p">,</span> <span class="s">'total_deaths'</span><span class="p">]].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'total_deaths'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'location'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'total_deaths'</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">top5_deaths</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"r"</span><span class="p">)</span>
+
+<span class="c1">#formatar o ax
+</span><span class="n">ax</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"País"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Mortes"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Países com o maior número de mortes por COVID-19"</span><span class="p">)</span>
+
+<span class="c1">#inserir o valor acima de cada barra
+</span><span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top5_deaths</span><span class="p">[</span><span class="s">'total_deaths'</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="p">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">index</span> <span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">'center'</span><span class="p">,</span><span class="n">verticalalignment</span><span class="o">=</span><span class="s">'bottom'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/img\posts\analise-covid\output_19_0.png" alt="png" /></p>
+
+<p>Vamos verificar como foi a evolução dos casos de COVID-19 no Mundo.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ev</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">location</span><span class="o">==</span><span class="s">'World'</span><span class="p">,[</span><span class="s">'date'</span><span class="p">,</span> <span class="s">'total_cases'</span><span class="p">]].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'total_cases'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'date'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'total_cases'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ev</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s">'plain'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s">'Data'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s">'Número de Casos'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Casos de COVID-19 no Mundo ao longo do tempo"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/img\posts\analise-covid\output_21_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plotar gráfico de dispersão em relaçao ao PIB x número de mortes
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">gdsp</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span><span class="o">==</span><span class="s">'2020-07-29'</span><span class="p">,[</span><span class="s">'gdp_per_capita'</span><span class="p">,</span> <span class="s">'total_deaths'</span><span class="p">]].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'gdp_per_capita'</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'gdp_per_capita'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'total_deaths'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">gdsp</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s">'plain'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s">'PIB'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s">'Total de Mortes'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/img\posts\analise-covid\output_22_0.png" alt="png" /></p>
+
+<p>Lembrando que esse gráfico não é nada conclusivo, pois envolve fatores como proporção de testes, etc..</p>
+
+<h3 id="análise-exploratória-para-o-brasil">Análise Exploratória para o Brasil</h3>
+
+<p>Vamos fazer uma Análise Exploratória do Brasil:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#criar uma cópia do Dataframe apenas com o Brasil
+</span><span class="n">df_brasil</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">location</span> <span class="o">==</span> <span class="s">'Brazil'</span><span class="p">].</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#visualizar as 5 primeiras linhas
+</span><span class="n">df_brasil</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iso_code</th>
+      <th>continent</th>
+      <th>location</th>
+      <th>date</th>
+      <th>total_cases</th>
+      <th>new_cases</th>
+      <th>total_deaths</th>
+      <th>new_deaths</th>
+      <th>total_cases_per_million</th>
+      <th>new_cases_per_million</th>
+      <th>total_deaths_per_million</th>
+      <th>new_deaths_per_million</th>
+      <th>new_tests</th>
+      <th>total_tests</th>
+      <th>total_tests_per_thousand</th>
+      <th>new_tests_per_thousand</th>
+      <th>new_tests_smoothed</th>
+      <th>new_tests_smoothed_per_thousand</th>
+      <th>tests_units</th>
+      <th>stringency_index</th>
+      <th>population</th>
+      <th>population_density</th>
+      <th>median_age</th>
+      <th>aged_65_older</th>
+      <th>aged_70_older</th>
+      <th>gdp_per_capita</th>
+      <th>extreme_poverty</th>
+      <th>cardiovasc_death_rate</th>
+      <th>diabetes_prevalence</th>
+      <th>female_smokers</th>
+      <th>male_smokers</th>
+      <th>handwashing_facilities</th>
+      <th>hospital_beds_per_thousand</th>
+      <th>life_expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4310</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2019-12-31</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+    <tr>
+      <th>4311</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2020-01-01</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+    <tr>
+      <th>4312</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2020-01-02</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+    <tr>
+      <th>4313</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2020-01-03</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+    <tr>
+      <th>4314</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2020-01-04</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Vamos identificar quando ocorreu o primeiro caso no Brasil:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_brasil</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_brasil</span><span class="p">.</span><span class="n">total_cases</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'date'</span><span class="p">).</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iso_code</th>
+      <th>continent</th>
+      <th>location</th>
+      <th>date</th>
+      <th>total_cases</th>
+      <th>new_cases</th>
+      <th>total_deaths</th>
+      <th>new_deaths</th>
+      <th>total_cases_per_million</th>
+      <th>new_cases_per_million</th>
+      <th>total_deaths_per_million</th>
+      <th>new_deaths_per_million</th>
+      <th>new_tests</th>
+      <th>total_tests</th>
+      <th>total_tests_per_thousand</th>
+      <th>new_tests_per_thousand</th>
+      <th>new_tests_smoothed</th>
+      <th>new_tests_smoothed_per_thousand</th>
+      <th>tests_units</th>
+      <th>stringency_index</th>
+      <th>population</th>
+      <th>population_density</th>
+      <th>median_age</th>
+      <th>aged_65_older</th>
+      <th>aged_70_older</th>
+      <th>gdp_per_capita</th>
+      <th>extreme_poverty</th>
+      <th>cardiovasc_death_rate</th>
+      <th>diabetes_prevalence</th>
+      <th>female_smokers</th>
+      <th>male_smokers</th>
+      <th>handwashing_facilities</th>
+      <th>hospital_beds_per_thousand</th>
+      <th>life_expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4367</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2020-02-26</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.005</td>
+      <td>0.005</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5.56</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<ul>
+  <li>O primeiro caso de COVID-19 no Brasil ocorreu no dia 26-02-2020.</li>
+</ul>
+
+<p>Vamos identificar quando ocorreu a primeira morte no Brasil:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_brasil</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_brasil</span><span class="p">.</span><span class="n">total_deaths</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">].</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'date'</span><span class="p">).</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iso_code</th>
+      <th>continent</th>
+      <th>location</th>
+      <th>date</th>
+      <th>total_cases</th>
+      <th>new_cases</th>
+      <th>total_deaths</th>
+      <th>new_deaths</th>
+      <th>total_cases_per_million</th>
+      <th>new_cases_per_million</th>
+      <th>total_deaths_per_million</th>
+      <th>new_deaths_per_million</th>
+      <th>new_tests</th>
+      <th>total_tests</th>
+      <th>total_tests_per_thousand</th>
+      <th>new_tests_per_thousand</th>
+      <th>new_tests_smoothed</th>
+      <th>new_tests_smoothed_per_thousand</th>
+      <th>tests_units</th>
+      <th>stringency_index</th>
+      <th>population</th>
+      <th>population_density</th>
+      <th>median_age</th>
+      <th>aged_65_older</th>
+      <th>aged_70_older</th>
+      <th>gdp_per_capita</th>
+      <th>extreme_poverty</th>
+      <th>cardiovasc_death_rate</th>
+      <th>diabetes_prevalence</th>
+      <th>female_smokers</th>
+      <th>male_smokers</th>
+      <th>handwashing_facilities</th>
+      <th>hospital_beds_per_thousand</th>
+      <th>life_expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4388</th>
+      <td>BRA</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>2020-03-18</td>
+      <td>291.0</td>
+      <td>57.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.369</td>
+      <td>0.268</td>
+      <td>0.005</td>
+      <td>0.005</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>60.65</td>
+      <td>212559409.0</td>
+      <td>25.04</td>
+      <td>33.5</td>
+      <td>8.552</td>
+      <td>5.06</td>
+      <td>14103.452</td>
+      <td>3.4</td>
+      <td>177.961</td>
+      <td>8.11</td>
+      <td>10.1</td>
+      <td>17.9</td>
+      <td>NaN</td>
+      <td>2.2</td>
+      <td>75.88</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<ul>
+  <li>A primeira morte por COVID-19 no Brasil ocorreu no dia 18-03-2020.</li>
+</ul>
+
+<p>Vamos verificar quantos dias levou do primeiro caso a primeira morte:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_brasil_tempo</span> <span class="o">=</span> <span class="n">df_brasil</span><span class="p">.</span><span class="n">date</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">4334</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_brasil</span><span class="p">.</span><span class="n">date</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">4313</span><span class="p">]</span>
+<span class="n">df_brasil_tempo</span><span class="p">.</span><span class="n">days</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>21
+</code></pre></div></div>
+
+<ul>
+  <li>O tempo entre o primeiro caso e a primeira morte por COVID-19 no Brasil foi de 21 dias.</li>
+</ul>
+
+<p>Vamos calcular a média do índice de mortalidade:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_totald</span> <span class="o">=</span> <span class="n">df_brasil</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span> <span class="o">==</span> <span class="s">'2020-07-29'</span><span class="p">,</span> <span class="p">[</span><span class="s">'total_deaths'</span><span class="p">]]</span>
+<span class="n">df_totalc</span> <span class="o">=</span> <span class="n">df_brasil</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">date</span> <span class="o">==</span> <span class="s">'2020-07-29'</span><span class="p">,</span> <span class="p">[</span><span class="s">'total_cases'</span><span class="p">]]</span>
+
+<span class="n">mortalidade</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_totald</span><span class="p">.</span><span class="n">total_deaths</span> <span class="o">/</span> <span class="n">df_totalc</span><span class="p">.</span><span class="n">total_cases</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mortalidade</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4521    3.57
+dtype: float64
+</code></pre></div></div>
+
+<ul>
+  <li>O Brasil tem uma mortalidade de 3.57%.</li>
+</ul>
+
+<p>###Plotagem de Gráficos</p>
+
+<p>Vamos plotar gráficos para melhor visualização dos dados:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plotar gráfico em linha com o número de novos casos diários
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'date'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'new_cases'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_brasil</span><span class="p">)</span>
+
+<span class="c1">#formatar o ax
+</span><span class="n">ax</span><span class="p">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s">'plain'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s">'Data'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s">'Número de Casos'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Novos casos diários de COVID-19 no Brasil"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/img\posts\analise-covid\output_42_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plotar gráfico em linha com o número de mortes diárias
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'date'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'new_deaths'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_brasil</span><span class="p">)</span>
+
+<span class="c1">#formatar o ax
+</span><span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s">'Data'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s">'Número de mortes'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Mortes diárias por COVID-19 no Brasil"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/img\posts\analise-covid\output_43_0.png" alt="png" /></p>
+
+<h2 id="conclusão">Conclusão</h2>
+
+<p>Infelizmente a Pandemia da COVID-19 continua em andamento, e enquanto não houver uma vacina eficaz a evolução da doença tende a ser mais rápida, apesar da queda de casos diários por conta da quarentena. Nessa análise, conseguimos visualizar informações importantes, como:</p>
+
+<ul>
+  <li>Os 5 países com mais casos são:
+    <ul>
+      <li>Estados Unidos - 4.351.997 de casos</li>
+      <li>Brasil - 2.483.191 de casos</li>
+      <li>India - 1.531.669 de casos</li>
+      <li>Russia - 823.515 de casos</li>
+      <li>África de Sul - 459.761 de casos</li>
+    </ul>
+  </li>
+  <li>Os 5 países com mais mortes são:
+    <ul>
+      <li>Estados Unidos - 149.256 mortes</li>
+      <li>Brasil - 88.539 mortes</li>
+      <li>Reino Unido - 45.878 mortes</li>
+      <li>Mexico - 44.876 mortes</li>
+      <li>Itália - 35.123 mortes</li>
+    </ul>
+  </li>
+  <li>
+    <p>O primeiro caso de COVID-19 no Brasil ocorreu no dia 26 de fevereiro de 2020.</p>
+  </li>
+  <li>
+    <p>A primeira morte por COVID-19 no Brasil ocorreu no dia 18 de março de 2020.</p>
+  </li>
+  <li>
+    <p>Levou cerca de 21 dias entre o primeiro caso e a primeira morte no Brasil.</p>
+  </li>
+  <li>O Brasil tem um índice de mortalide de 3,57%.</li>
+</ul>
+
+<p>Lembrando que esses dados são atualizados até o dia 29 de julho de 2020, e podem estar desatualizados dependendo da data em que esse notebook for lido.</p>
+
+:ET
