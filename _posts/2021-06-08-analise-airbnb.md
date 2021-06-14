@@ -75,7 +75,7 @@ Antes de iniciar qualquer análise, vamos verificar a cara do nosso *dataset*, a
 df.head()
 ```
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -326,7 +326,7 @@ df[['price', 'minimum_nights', 'number_of_reviews', 'reviews_per_month',
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -538,7 +538,7 @@ df_clean[['price', 'minimum_nights','number_of_reviews', 'reviews_per_month', 'c
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -662,7 +662,7 @@ display(corr)
 ```
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;

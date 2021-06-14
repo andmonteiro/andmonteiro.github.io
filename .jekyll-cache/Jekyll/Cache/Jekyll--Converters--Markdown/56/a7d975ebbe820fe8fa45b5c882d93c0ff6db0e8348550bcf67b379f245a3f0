@@ -1,184 +1,156 @@
----
-layout: post
-title: "Analisando a Violência no Rio de Janeiro"
-subtitle: "Neste notebook iremos analisar os dados do ISP RJ com relação ao número de ocorrências de violência no Estado do Rio de Janeiro."
-background: '/img/posts/analise-rj/analise-rj.jpg'
----
+I"m�<h1 id="analisando-a-violência-no-rio-de-janeiro">Analisando a Violência no Rio de Janeiro</h1>
 
-# Analisando a Violência no Rio de Janeiro
+<p>Neste notebook iremos analisar os dados do ISP RJ com relação ao número de ocorrências de violência no Estado do Rio de Janeiro.</p>
 
-Neste notebook iremos analisar os dados do ISP RJ com relação ao número de ocorrências de violência no Estado do Rio de Janeiro.
+<p>É fato que a violência atinge todas as cidades do Brasil, e vem ganhando destaque nos noticiários cada vez mais.</p>
 
-É fato que a violência atinge todas as cidades do Brasil, e vem ganhando destaque nos noticiários cada vez mais.
+<p>Atualmente, as leis de acesso à informação e a conscientização dos orgãos públicos, vêm proporcionando a disponibilidade de várias fontes de dados.
+Neste exemplo, o Governo do Rio de Janeiro vem trazendo a iniciativa do portal <a href="https://http://www.ispdados.rj.gov.br/estatistica.html">ISP Dados</a>. Neste projeto, faremos uma análise em cima dos indicadores estatísticos da violência no Rio, explorando alguns dos dados fornecidos.</p>
 
-Atualmente, as leis de acesso à informação e a conscientização dos orgãos públicos, vêm proporcionando a disponibilidade de várias fontes de dados.
-Neste exemplo, o Governo do Rio de Janeiro vem trazendo a iniciativa do portal [ISP Dados](https://http://www.ispdados.rj.gov.br/estatistica.html). Neste projeto, faremos uma análise em cima dos indicadores estatísticos da violência no Rio, explorando alguns dos dados fornecidos.
+<h2 id="obtenção-dos-dados">Obtenção dos Dados</h2>
 
-## Obtenção dos Dados
+<p>Os dados foram obtidos diretamente do Portal ISP Dados, que é uma página de dados abertos do Instituto de Segurança Pública do Rio de Janeiro.</p>
 
+<p>As estatísticas divulgadas no portal são construídas a partir dos Registros de Ocorrência(RO) lavrados nas Delegacias de Polícia Civil do Estado do Rio de Janeiro, além de informações complementares de orgãos específicos da Polícia Militar do Estado do Rio de Janeiro.</p>
 
-Os dados foram obtidos diretamente do Portal ISP Dados, que é uma página de dados abertos do Instituto de Segurança Pública do Rio de Janeiro.
+<p>Como forma de criar um controle de qualidade, antes de serem consolidados no ISP o RO é submetido à Corregedoria Interna da Polícia Civil(COINPOL). As estatísticas produzidas se baseiam na data em que foi confeccionado o Registro de Ocorrência.</p>
 
-As estatísticas divulgadas no portal são construídas a partir dos Registros de Ocorrência(RO) lavrados nas Delegacias de Polícia Civil do Estado do Rio de Janeiro, além de informações complementares de orgãos específicos da Polícia Militar do Estado do Rio de Janeiro.
+<h3 id="importando-os-dados">Importando os dados</h3>
+<p>Inicialmente iremos importar a biblioteca Pandas e o Numpy seguido dos dados deste <a href="https://raw.githubusercontent.com/carlosfab/dsnp2/master/datasets/violencia_rio.csv">link</a>, usando <code class="language-plaintext highlighter-rouge">df = pd.read_csv("endereço_do_csv")</code></p>
 
-Como forma de criar um controle de qualidade, antes de serem consolidados no ISP o RO é submetido à Corregedoria Interna da Polícia Civil(COINPOL). As estatísticas produzidas se baseiam na data em que foi confeccionado o Registro de Ocorrência.
-
-### Importando os dados
-Inicialmente iremos importar a biblioteca Pandas e o Numpy seguido dos dados deste [link](https://raw.githubusercontent.com/carlosfab/dsnp2/master/datasets/violencia_rio.csv), usando `df = pd.read_csv("endereço_do_csv")`
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 
-```python
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"https://raw.githubusercontent.com/anssodre/datasets/master/violencia_rio.csv"</span><span class="p">)</span>
+</code></pre></div></div>
 
+<h2 id="análise-inicial-dos-dados">Análise Inicial dos Dados</h2>
 
-df = pd.read_csv("https://raw.githubusercontent.com/anssodre/datasets/master/violencia_rio.csv")
-```
+<p>Antes de começarmos a explorar o dataset, é preciso saber com o que estamos lidando. Para começarmos a entender melhor esse aspecto, vamos verificar as dimensões do dataset.</p>
 
-## Análise Inicial dos Dados
+<ul>
+  <li>Qual o tamanho do seu DataFrame (<code class="language-plaintext highlighter-rouge">shape</code>)</li>
+  <li>Extrair e imprimir os nomes das colunas (<code class="language-plaintext highlighter-rouge">columns</code>)</li>
+  <li>Quais os tipos das variáveis (<code class="language-plaintext highlighter-rouge">dtypes</code>)</li>
+  <li>Visualizar as 5 primeiras linhas (<code class="language-plaintext highlighter-rouge">head</code>)</li>
+  <li>Identifique a porcentagem de valores ausentes das colunas</li>
+</ul>
 
-Antes de começarmos a explorar o dataset, é preciso saber com o que estamos lidando. Para começarmos a entender melhor esse aspecto, vamos verificar as dimensões do dataset.
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># verificar o tamanho do DataFrame
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Variáveis: "</span><span class="p">,</span> <span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Entradas: "</span><span class="p">,</span> <span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></div>
 
-* Qual o tamanho do seu DataFrame (`shape`)
-* Extrair e imprimir os nomes das colunas (`columns`)
-* Quais os tipos das variáveis (`dtypes`)
-* Visualizar as 5 primeiras linhas (`head`)
-* Identifique a porcentagem de valores ausentes das colunas
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Variáveis:  56
+Entradas:  344
+</code></pre></div></div>
 
+<p>Usamos o <code class="language-plaintext highlighter-rouge">df.shape</code> para exibir o tamanho do Dataframe, sendo <code class="language-plaintext highlighter-rouge">df.shape[1]</code> o número de colunas e <code class="language-plaintext highlighter-rouge">df.shape[0]</code> o número de linhas.</p>
 
+<p>Agora que já sabemos com a dimensão dos dados com que estamos lidando, vamos verificar que tipo de dados nós temos, verificando as variáveis existentes no nosso conjunto de dados.</p>
 
-```python
-# verificar o tamanho do DataFrame
-print("Variáveis: ", df.shape[1])
-print("Entradas: ", df.shape[0])
-```
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#imprimir o nome das colunas
+</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span>
+</code></pre></div></div>
 
-    Variáveis:  56
-    Entradas:  344
-    
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Index(['vano', 'mes', 'hom_doloso', 'lesao_corp_morte', 'latrocinio',
+       'hom_por_interv_policial', 'tentat_hom', 'lesao_corp_dolosa', 'estupro',
+       'hom_culposo', 'lesao_corp_culposa', 'roubo_comercio',
+       'roubo_residencia', 'roubo_veiculo', 'roubo_carga', 'roubo_transeunte',
+       'roubo_em_coletivo', 'roubo_banco', 'roubo_cx_eletronico',
+       'roubo_celular', 'roubo_conducao_saque', 'roubo_apos_saque',
+       'roubo_bicicleta', 'outros_roubos', 'total_roubos', 'furto_veiculos',
+       'furto_transeunte', 'furto_coletivo', 'furto_celular',
+       'furto_bicicleta', 'outros_furtos', 'total_furtos', 'sequestro',
+       'extorsao', 'sequestro_relampago', 'estelionato', 'apreensao_drogas',
+       'posse_drogas', 'trafico_drogas', 'apreensao_drogas_sem_autor',
+       'recuperacao_veiculos', 'apf', 'aaapai', 'cmp', 'cmba', 'ameaca',
+       'pessoas_desaparecidas', 'encontro_cadaver', 'encontro_ossada',
+       'pol_militares_mortos_serv', 'pol_civis_mortos_serv',
+       'indicador_letalidade', 'indicador_roubo_rua', 'indicador_roubo_veic',
+       'registro_ocorrencias', 'fase'],
+      dtype='object')
+</code></pre></div></div>
 
-Usamos o `df.shape` para exibir o tamanho do Dataframe, sendo `df.shape[1]` o número de colunas e `df.shape[0]` o número de linhas.
+<p>Sabendo com quantas variáveis e linhas estamos lidando, e que tipo de informação vamos encontrar no dataset, é importante analisarmos o tipo de cada variável que temos.</p>
 
-Agora que já sabemos com a dimensão dos dados com que estamos lidando, vamos verificar que tipo de dados nós temos, verificando as variáveis existentes no nosso conjunto de dados.
+<p>Esse tipo de informação é bastante útil, e nos ajudará a direcionar nosso trabalho na fase de limpeza dos dados.</p>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver os tipos das variáveis
+</span><span class="n">df</span><span class="p">.</span><span class="n">dtypes</span>
+</code></pre></div></div>
 
-```python
-#imprimir o nome das colunas
-df.columns
-```
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vano                            int64
+mes                             int64
+hom_doloso                      int64
+lesao_corp_morte              float64
+latrocinio                      int64
+hom_por_interv_policial       float64
+tentat_hom                      int64
+lesao_corp_dolosa               int64
+estupro                       float64
+hom_culposo                   float64
+lesao_corp_culposa            float64
+roubo_comercio                  int64
+roubo_residencia                int64
+roubo_veiculo                   int64
+roubo_carga                     int64
+roubo_transeunte                int64
+roubo_em_coletivo               int64
+roubo_banco                     int64
+roubo_cx_eletronico           float64
+roubo_celular                 float64
+roubo_conducao_saque          float64
+roubo_apos_saque              float64
+roubo_bicicleta               float64
+outros_roubos                   int64
+total_roubos                    int64
+furto_veiculos                  int64
+furto_transeunte                int64
+furto_coletivo                float64
+furto_celular                 float64
+furto_bicicleta               float64
+outros_furtos                   int64
+total_furtos                    int64
+sequestro                     float64
+extorsao                      float64
+sequestro_relampago           float64
+estelionato                   float64
+apreensao_drogas                int64
+posse_drogas                  float64
+trafico_drogas                float64
+apreensao_drogas_sem_autor    float64
+recuperacao_veiculos            int64
+apf                           float64
+aaapai                        float64
+cmp                           float64
+cmba                          float64
+ameaca                        float64
+pessoas_desaparecidas         float64
+encontro_cadaver                int64
+encontro_ossada               float64
+pol_militares_mortos_serv     float64
+pol_civis_mortos_serv         float64
+indicador_letalidade            int64
+indicador_roubo_rua             int64
+indicador_roubo_veic            int64
+registro_ocorrencias          float64
+fase                            int64
+dtype: object
+</code></pre></div></div>
 
+<p>Aqui é interessante notar que todas as variáveis presentes no dataset são do tipo numérico, sejam elas <code class="language-plaintext highlighter-rouge">int</code> ou <code class="language-plaintext highlighter-rouge">float</code>.</p>
 
+<p>Com tudo isso em mente, é hora de darmos uma olhada nesse dataset e ver como ele está organizado, como esses dados são apresentados e termos uma ideia do que podemos fazer com eles.</p>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver as 5 primeiras entradas do dataset
+</span><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
 
-    Index(['vano', 'mes', 'hom_doloso', 'lesao_corp_morte', 'latrocinio',
-           'hom_por_interv_policial', 'tentat_hom', 'lesao_corp_dolosa', 'estupro',
-           'hom_culposo', 'lesao_corp_culposa', 'roubo_comercio',
-           'roubo_residencia', 'roubo_veiculo', 'roubo_carga', 'roubo_transeunte',
-           'roubo_em_coletivo', 'roubo_banco', 'roubo_cx_eletronico',
-           'roubo_celular', 'roubo_conducao_saque', 'roubo_apos_saque',
-           'roubo_bicicleta', 'outros_roubos', 'total_roubos', 'furto_veiculos',
-           'furto_transeunte', 'furto_coletivo', 'furto_celular',
-           'furto_bicicleta', 'outros_furtos', 'total_furtos', 'sequestro',
-           'extorsao', 'sequestro_relampago', 'estelionato', 'apreensao_drogas',
-           'posse_drogas', 'trafico_drogas', 'apreensao_drogas_sem_autor',
-           'recuperacao_veiculos', 'apf', 'aaapai', 'cmp', 'cmba', 'ameaca',
-           'pessoas_desaparecidas', 'encontro_cadaver', 'encontro_ossada',
-           'pol_militares_mortos_serv', 'pol_civis_mortos_serv',
-           'indicador_letalidade', 'indicador_roubo_rua', 'indicador_roubo_veic',
-           'registro_ocorrencias', 'fase'],
-          dtype='object')
-
-
-
-Sabendo com quantas variáveis e linhas estamos lidando, e que tipo de informação vamos encontrar no dataset, é importante analisarmos o tipo de cada variável que temos.
-
-Esse tipo de informação é bastante útil, e nos ajudará a direcionar nosso trabalho na fase de limpeza dos dados.
-
-
-```python
-# ver os tipos das variáveis
-df.dtypes
-```
-
-
-
-
-    vano                            int64
-    mes                             int64
-    hom_doloso                      int64
-    lesao_corp_morte              float64
-    latrocinio                      int64
-    hom_por_interv_policial       float64
-    tentat_hom                      int64
-    lesao_corp_dolosa               int64
-    estupro                       float64
-    hom_culposo                   float64
-    lesao_corp_culposa            float64
-    roubo_comercio                  int64
-    roubo_residencia                int64
-    roubo_veiculo                   int64
-    roubo_carga                     int64
-    roubo_transeunte                int64
-    roubo_em_coletivo               int64
-    roubo_banco                     int64
-    roubo_cx_eletronico           float64
-    roubo_celular                 float64
-    roubo_conducao_saque          float64
-    roubo_apos_saque              float64
-    roubo_bicicleta               float64
-    outros_roubos                   int64
-    total_roubos                    int64
-    furto_veiculos                  int64
-    furto_transeunte                int64
-    furto_coletivo                float64
-    furto_celular                 float64
-    furto_bicicleta               float64
-    outros_furtos                   int64
-    total_furtos                    int64
-    sequestro                     float64
-    extorsao                      float64
-    sequestro_relampago           float64
-    estelionato                   float64
-    apreensao_drogas                int64
-    posse_drogas                  float64
-    trafico_drogas                float64
-    apreensao_drogas_sem_autor    float64
-    recuperacao_veiculos            int64
-    apf                           float64
-    aaapai                        float64
-    cmp                           float64
-    cmba                          float64
-    ameaca                        float64
-    pessoas_desaparecidas         float64
-    encontro_cadaver                int64
-    encontro_ossada               float64
-    pol_militares_mortos_serv     float64
-    pol_civis_mortos_serv         float64
-    indicador_letalidade            int64
-    indicador_roubo_rua             int64
-    indicador_roubo_veic            int64
-    registro_ocorrencias          float64
-    fase                            int64
-    dtype: object
-
-
-
-Aqui é interessante notar que todas as variáveis presentes no dataset são do tipo numérico, sejam elas `int` ou `float`.
-
-Com tudo isso em mente, é hora de darmos uma olhada nesse dataset e ver como ele está organizado, como esses dados são apresentados e termos uma ideia do que podemos fazer com eles.
-
-
-```python
-# ver as 5 primeiras entradas do dataset
-df.head()
-```
-
-
-
-
-<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
-<style scoped>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:auto; ">
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -189,7 +161,7 @@ df.head()
         text-align: right;
     }
 </style>
-<table border="1" class="dataframe" >
+<table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -551,19 +523,12 @@ df.head()
 </table>
 </div>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver as 5 últimas entradas do dataset
+</span><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
 
-
-
-```python
-# ver as 5 últimas entradas do dataset
-df.tail()
-```
-
-
-
-
-<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
-<style scoped>
+<div>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -938,118 +903,113 @@ df.tail()
 </table>
 </div>
 
+<p>É interessante reaparar que algumas variáveis apresentam muitos dados ausentes. Dado o grande intervalo de tempo apresentado no dataset, podemos sugerir algumas hipóteses do que poderia explicar essa ausência, e como podemos contorná-la para continuar explorando o conjunto de dados.</p>
 
+<ul>
+  <li>
+    <p>Como temos dados registrados desde o ano de 1991, alguns desses crimes poderiam não estar sendo contabilizados pelo órgão que coletou esses dados e gerou esse dataset. Estarem ausentes não significa que não existiram, e vamos pensar em formas de lidar com essa ausência logo mais.</p>
+  </li>
+  <li>
+    <p>Infelizmente, se hoje temos uma cultura de dados que ainda deixa a desejar, o que dizer da mesma no período em tela? Devemos levar em consideração também o formato em que esses dados eram registrados à época. Será que foram registrados corretamente e perdidos em períodos de digitalização? Ou será que o gerenciamento dessas informações sempre foi falho?</p>
+  </li>
+</ul>
 
-É interessante reaparar que algumas variáveis apresentam muitos dados ausentes. Dado o grande intervalo de tempo apresentado no dataset, podemos sugerir algumas hipóteses do que poderia explicar essa ausência, e como podemos contorná-la para continuar explorando o conjunto de dados.
+<p>Antes de decidirmos o que fazer em relação aos dados ausentes, vamos verificar a proporção deles em relação à totalidade do dataset.</p>
 
-* Como temos dados registrados desde o ano de 1991, alguns desses crimes poderiam não estar sendo contabilizados pelo órgão que coletou esses dados e gerou esse dataset. Estarem ausentes não significa que não existiram, e vamos pensar em formas de lidar com essa ausência logo mais.
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver os valores faltantes das colunas
+</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">isnull</span><span class="p">().</span><span class="nb">sum</span><span class="p">()</span><span class="o">/</span> <span class="n">df</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
 
-* Infelizmente, se hoje temos uma cultura de dados que ainda deixa a desejar, o que dizer da mesma no período em tela? Devemos levar em consideração também o formato em que esses dados eram registrados à época. Será que foram registrados corretamente e perdidos em períodos de digitalização? Ou será que o gerenciamento dessas informações sempre foi falho?
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>roubo_bicicleta               0.802326
+furto_bicicleta               0.802326
+apreensao_drogas_sem_autor    0.523256
+posse_drogas                  0.523256
+apf                           0.523256
+aaapai                        0.523256
+cmp                           0.523256
+trafico_drogas                0.523256
+cmba                          0.523256
+sequestro_relampago           0.418605
+furto_coletivo                0.418605
+extorsao                      0.418605
+furto_celular                 0.418605
+roubo_apos_saque              0.418605
+roubo_conducao_saque          0.418605
+roubo_cx_eletronico           0.418605
+estupro                       0.418605
+estelionato                   0.418605
+pol_civis_mortos_serv         0.418605
+pol_militares_mortos_serv     0.418605
+pessoas_desaparecidas         0.383721
+encontro_ossada               0.383721
+roubo_celular                 0.313953
+lesao_corp_culposa            0.279070
+ameaca                        0.279070
+sequestro                     0.279070
+lesao_corp_morte              0.279070
+registro_ocorrencias          0.279070
+hom_por_interv_policial       0.244186
+hom_culposo                   0.244186
+tentat_hom                    0.000000
+roubo_comercio                0.000000
+roubo_residencia              0.000000
+latrocinio                    0.000000
+lesao_corp_dolosa             0.000000
+hom_doloso                    0.000000
+roubo_transeunte              0.000000
+mes                           0.000000
+roubo_veiculo                 0.000000
+roubo_carga                   0.000000
+fase                          0.000000
+roubo_em_coletivo             0.000000
+roubo_banco                   0.000000
+outros_roubos                 0.000000
+total_roubos                  0.000000
+furto_veiculos                0.000000
+furto_transeunte              0.000000
+outros_furtos                 0.000000
+total_furtos                  0.000000
+apreensao_drogas              0.000000
+recuperacao_veiculos          0.000000
+encontro_cadaver              0.000000
+indicador_letalidade          0.000000
+indicador_roubo_rua           0.000000
+indicador_roubo_veic          0.000000
+vano                          0.000000
+dtype: float64
+</code></pre></div></div>
 
-Antes de decidirmos o que fazer em relação aos dados ausentes, vamos verificar a proporção deles em relação à totalidade do dataset.
+<p>Acima, podemos ver que algumas das variáveis tem valores faltantes em proporções consideráveis como é o exemplo de crimes relacionados a bicicletas e apreensão de drogas.</p>
 
+<p>Como os dados estão estruturados ao longo do tempo, uma forma de realizar uma análise que condiz melhor com a realidade, podemos analisá-los a partir da data em que começaram a ser registrados.</p>
 
-```python
-# ver os valores faltantes das colunas
-(df.isnull().sum()/ df.shape[0]).sort_values(ascending=False)
-```
+<p>Além disso, existem outras formas de encararmos e explorarmos os dados, como por exemplo:</p>
 
+<ul>
+  <li>Números anuais por crime.</li>
+  <li>Números mensais por crime.</li>
+  <li>Categorias de crimes (Contra a vida, Contra o patrimônio, etc.)</li>
+</ul>
 
+<h2 id="informações-estatísticas-da-violência-no-rio-de-janeiro">Informações Estatísticas da Violência no Rio de Janeiro</h2>
 
+<p>Usando o método <code class="language-plaintext highlighter-rouge">describe()</code> podemos visualizar a distribuição estatística do dataframe.</p>
 
-    roubo_bicicleta               0.802326
-    furto_bicicleta               0.802326
-    apreensao_drogas_sem_autor    0.523256
-    posse_drogas                  0.523256
-    apf                           0.523256
-    aaapai                        0.523256
-    cmp                           0.523256
-    trafico_drogas                0.523256
-    cmba                          0.523256
-    sequestro_relampago           0.418605
-    furto_coletivo                0.418605
-    extorsao                      0.418605
-    furto_celular                 0.418605
-    roubo_apos_saque              0.418605
-    roubo_conducao_saque          0.418605
-    roubo_cx_eletronico           0.418605
-    estupro                       0.418605
-    estelionato                   0.418605
-    pol_civis_mortos_serv         0.418605
-    pol_militares_mortos_serv     0.418605
-    pessoas_desaparecidas         0.383721
-    encontro_ossada               0.383721
-    roubo_celular                 0.313953
-    lesao_corp_culposa            0.279070
-    ameaca                        0.279070
-    sequestro                     0.279070
-    lesao_corp_morte              0.279070
-    registro_ocorrencias          0.279070
-    hom_por_interv_policial       0.244186
-    hom_culposo                   0.244186
-    tentat_hom                    0.000000
-    roubo_comercio                0.000000
-    roubo_residencia              0.000000
-    latrocinio                    0.000000
-    lesao_corp_dolosa             0.000000
-    hom_doloso                    0.000000
-    roubo_transeunte              0.000000
-    mes                           0.000000
-    roubo_veiculo                 0.000000
-    roubo_carga                   0.000000
-    fase                          0.000000
-    roubo_em_coletivo             0.000000
-    roubo_banco                   0.000000
-    outros_roubos                 0.000000
-    total_roubos                  0.000000
-    furto_veiculos                0.000000
-    furto_transeunte              0.000000
-    outros_furtos                 0.000000
-    total_furtos                  0.000000
-    apreensao_drogas              0.000000
-    recuperacao_veiculos          0.000000
-    encontro_cadaver              0.000000
-    indicador_letalidade          0.000000
-    indicador_roubo_rua           0.000000
-    indicador_roubo_veic          0.000000
-    vano                          0.000000
-    dtype: float64
+<p>Utilizando esse método, temos informações que podem nos ajudar a:</p>
 
+<ul>
+  <li>Identificar outliers.</li>
+  <li>Entender melhor a distribuição dos dados.</li>
+  <li>Identificar falhas na distribuição dos dados.</li>
+  <li>Após a limpeza dos dados, verificar a eficácia e as diferenças entre os dados tratados e não tratados.</li>
+</ul>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># imprimir o resultado estatístico do DataFrame
+</span><span class="n">df</span><span class="p">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div></div>
 
-Acima, podemos ver que algumas das variáveis tem valores faltantes em proporções consideráveis como é o exemplo de crimes relacionados a bicicletas e apreensão de drogas.
-
-Como os dados estão estruturados ao longo do tempo, uma forma de realizar uma análise que condiz melhor com a realidade, podemos analisá-los a partir da data em que começaram a ser registrados.
-
-Além disso, existem outras formas de encararmos e explorarmos os dados, como por exemplo:
-
-* Números anuais por crime.
-* Números mensais por crime.
-* Categorias de crimes (Contra a vida, Contra o patrimônio, etc.)
-
-## Informações Estatísticas da Violência no Rio de Janeiro
-
-Usando o método `describe()` podemos visualizar a distribuição estatística do dataframe.
-
-Utilizando esse método, temos informações que podem nos ajudar a:
-
-* Identificar outliers.
-* Entender melhor a distribuição dos dados.
-* Identificar falhas na distribuição dos dados.
-* Após a limpeza dos dados, verificar a eficácia e as diferenças entre os dados tratados e não tratados.
-
-
-
-```python
-# imprimir o resultado estatístico do DataFrame
-df.describe()
-```
-
-
-
-
-<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
-<style scoped>
+<div>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1601,113 +1561,100 @@ df.describe()
 </table>
 </div>
 
+<p>Somando os registros de furto(<code class="language-plaintext highlighter-rouge">furto_veiclos</code> ,<code class="language-plaintext highlighter-rouge">furto_transeunte</code> ,<code class="language-plaintext highlighter-rouge">furto_coletivo</code> , <code class="language-plaintext highlighter-rouge">furto_celular</code> , <code class="language-plaintext highlighter-rouge">furto_bicicleta</code> , <code class="language-plaintext highlighter-rouge">outros_furtos</code>) é o que tem a maior média, com cerca de 10.433 registros. Enquanto o de policiais civis mortos em serviço tem a menor média com cerca de 0.34.</p>
 
+<h3 id="crimes-contra-o-patrimônio---veículos">Crimes Contra o Patrimônio - Veículos</h3>
 
-Somando os registros de furto(`furto_veiclos` ,`furto_transeunte` ,`furto_coletivo` , `furto_celular` , `furto_bicicleta` , `outros_furtos`) é o que tem a maior média, com cerca de 10.433 registros. Enquanto o de policiais civis mortos em serviço tem a menor média com cerca de 0.34.
+<p>Vamos dedicar essa seção do projeto para investigar dados em relação aos crimes de roubo e furto de veículos.</p>
 
-### Crimes Contra o Patrimônio - Veículos
+<p>Problema comum nas grandes metrópoles brasileiras, esse tipo de crime merece destaque em nosso projeto. Como temos dados sobre roubo, furto e recuperação de veículos, conseguimos utilizar essas informações para encontrar resultados pertinentes em relação à situação e ao combate a esse tipo de crime.</p>
 
-Vamos dedicar essa seção do projeto para investigar dados em relação aos crimes de roubo e furto de veículos.
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver a média da variável roubo_veiculo
+</span><span class="n">mean_roubo_veiculo</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">roubo_veiculo</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_roubo_veiculo</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div></div>
 
-Problema comum nas grandes metrópoles brasileiras, esse tipo de crime merece destaque em nosso projeto. Como temos dados sobre roubo, furto e recuperação de veículos, conseguimos utilizar essas informações para encontrar resultados pertinentes em relação à situação e ao combate a esse tipo de crime.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2448.7
+</code></pre></div></div>
 
+<ul>
+  <li>Podemos verificar que a média de roubo de veículos é de 2488 por mês.</li>
+</ul>
 
-```python
-# ver a média da variável roubo_veiculo
-mean_roubo_veiculo = df.roubo_veiculo.mean()
-print(round(mean_roubo_veiculo,2))
-```
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver a média da variável furto_veiculos
+</span><span class="n">mean_furto_veiculos</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">furto_veiculos</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_furto_veiculos</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div></div>
 
-    2448.7
-    
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1674.67
+</code></pre></div></div>
 
-* Podemos verificar que a média de roubo de veículos é de 2488 por mês.
+<ul>
+  <li>Em relação aos furtos, os números são um pouco menores, mas ainda altos. Foram registrados em média, 1674 furtos de veículos por mês.</li>
+</ul>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ver a média da variável recuperacao_veiculos
+</span><span class="n">mean_recuperacao_veiculos</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">recuperacao_veiculos</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_recuperacao_veiculos</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div></div>
 
-```python
-# ver a média da variável furto_veiculos
-mean_furto_veiculos = df.furto_veiculos.mean()
-print(round(mean_furto_veiculos,2))
-```
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1772.24
+</code></pre></div></div>
 
-    1674.67
-    
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># total de veículos perdidos
+</span><span class="n">total</span> <span class="o">=</span> <span class="n">mean_roubo_veiculo</span> <span class="o">+</span> <span class="n">mean_furto_veiculos</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">total</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 
-* Em relação aos furtos, os números são um pouco menores, mas ainda altos. Foram registrados em média, 1674 furtos de veículos por mês.
+</code></pre></div></div>
 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4123.37
+</code></pre></div></div>
 
-```python
-# ver a média da variável recuperacao_veiculos
-mean_recuperacao_veiculos = df.recuperacao_veiculos.mean()
-print(round(mean_recuperacao_veiculos,2))
-```
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># porcentagem de veículos recuperados
+</span><span class="n">pct</span> <span class="o">=</span> <span class="n">mean_recuperacao_veiculos</span><span class="o">/</span><span class="n">total</span><span class="o">*</span><span class="mi">100</span>
 
-    1772.24
-    
+<span class="k">print</span><span class="p">(</span><span class="n">pct</span><span class="p">)</span>
+</code></pre></div></div>
 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>42.980346705075085
+</code></pre></div></div>
 
-```python
-# total de veículos perdidos
-total = mean_roubo_veiculo + mean_furto_veiculos
-print(round(total,2))
+<p>Podemos concluir que:</p>
+<ul>
+  <li>Há uma média de 4123 veículos perdidos por mês.</li>
+  <li>Cerca de 1772 veículos são recuperados por mês.</li>
+  <li>42.98% dos veículos roubados ou furtados são recuperados.</li>
+</ul>
 
-```
+<h3 id="crimes-contra-o-patrimônio---roubo">Crimes Contra o Patrimônio - Roubo</h3>
 
-    4123.37
-    
+<p>Abaixo, vamos identificar qual foi o máximo e mínimo registrado para a variável <code class="language-plaintext highlighter-rouge">total_roubos</code> ao longo do período observado no dataset.</p>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># valores max e min de total_roubos
+</span><span class="n">max_total_roubos</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">total_roubos</span><span class="p">.</span><span class="nb">max</span><span class="p">()</span>
+<span class="n">min_total_roubos</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">total_roubos</span><span class="p">.</span><span class="nb">min</span><span class="p">()</span>
 
-```python
-# porcentagem de veículos recuperados
-pct = mean_recuperacao_veiculos/total*100
+<span class="c1"># imprimir os valores máximos e mínimos
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Min:</span><span class="se">\t</span><span class="s">{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">min_total_roubos</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Max:</span><span class="se">\t</span><span class="s">{}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">max_total_roubos</span><span class="p">))</span>
+</code></pre></div></div>
 
-print(pct)
-```
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Min:	3261
+Max:	23203
+</code></pre></div></div>
 
-    42.980346705075085
-    
+<p>Acima podemos ver que o mês com menor número de casos foram registrados 3261 roubos.</p>
 
-Podemos concluir que:
-* Há uma média de 4123 veículos perdidos por mês.
-* Cerca de 1772 veículos são recuperados por mês.
-* 42.98% dos veículos roubados ou furtados são recuperados.
+<p>Em relação ao mês com números mais elevado, houveram 23203 roubos.</p>
 
-### Crimes Contra o Patrimônio - Roubo
+<p>Vamos investigar um pouco mais a fundo essas entradas.</p>
 
-Abaixo, vamos identificar qual foi o máximo e mínimo registrado para a variável `total_roubos` ao longo do período observado no dataset.
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># verificando o mês com menor número de roubo
+</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">total_roubos</span> <span class="o">==</span> <span class="mi">3261</span><span class="p">]</span>
+</code></pre></div></div>
 
-
-```python
-# valores max e min de total_roubos
-max_total_roubos = df.total_roubos.max()
-min_total_roubos = df.total_roubos.min()
-
-# imprimir os valores máximos e mínimos
-print("Min:\t{}".format(min_total_roubos))
-print("Max:\t{}".format(max_total_roubos))
-```
-
-    Min:	3261
-    Max:	23203
-    
-
-Acima podemos ver que o mês com menor número de casos foram registrados 3261 roubos.
-
-Em relação ao mês com números mais elevado, houveram 23203 roubos.
-
-Vamos investigar um pouco mais a fundo essas entradas.
-
-
-```python
-# verificando o mês com menor número de roubo
-df[df.total_roubos == 3261]
-```
-
-
-
-
-<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
-<style scoped>
+<div>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1846,19 +1793,12 @@ df[df.total_roubos == 3261]
 </table>
 </div>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># verificando o mês com maior número de roubos
+</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">.</span><span class="n">total_roubos</span> <span class="o">==</span> <span class="mi">23203</span><span class="p">]</span>
+</code></pre></div></div>
 
-
-
-```python
-# verificando o mês com maior número de roubos
-df[df.total_roubos == 23203]
-```
-
-
-
-
-<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
-<style scoped>
+<div>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1997,54 +1937,42 @@ df[df.total_roubos == 23203]
 </table>
 </div>
 
+<p>Acima, vemos que o mês de Fevereiro de 1991 foi o mês com mais casos de roubo registrados no nosso dataset, enquanto o mês com menor número de casos foi Maio de 2017.</p>
 
+<p>Isso sugere um mau sinal, indicando que, talvez, o crime venha aumentando. Apenas uma análise mais aprofundada pode nos dizer.</p>
 
-Acima, vemos que o mês de Fevereiro de 1991 foi o mês com mais casos de roubo registrados no nosso dataset, enquanto o mês com menor número de casos foi Maio de 2017.
+<h2 id="visualização-de-dados">Visualização de Dados</h2>
 
-Isso sugere um mau sinal, indicando que, talvez, o crime venha aumentando. Apenas uma análise mais aprofundada pode nos dizer.
+<p>Histogramas são poderosas ferramentas de visualização, que nos auxiliam a entender a distribuição dos valores em uma variável.</p>
 
-## Visualização de Dados
+<p>Abaixo, faremos essa análise em relação à variável <code class="language-plaintext highlighter-rouge">hom_doloso</code>.</p>
 
-Histogramas são poderosas ferramentas de visualização, que nos auxiliam a entender a distribuição dos valores em uma variável.
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">[</span><span class="s">'hom_doloso'</span><span class="p">].</span><span class="n">hist</span><span class="p">();</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Quantidade de ocorrências'</span><span class="p">);</span>
+</code></pre></div></div>
 
-Abaixo, faremos essa análise em relação à variável `hom_doloso`.
+<p><img src="\img\posts\analise-rj\output_36_0.png" alt="png" /></p>
 
+<p>Podemos ver que em quase 70 meses tivemos em torno de 500 a 550 registros de homicídos dolosos.</p>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">registro_ocorrencias</span><span class="p">.</span><span class="n">plot</span><span class="p">();</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Registros de Ocorrência'</span><span class="p">);</span>
+</code></pre></div></div>
 
-```python
-df['hom_doloso'].hist();
-plt.xlabel('Quantidade de ocorrências');
-```
+<p><img src="\img\posts\analise-rj\output_38_0.png" alt="png" /></p>
 
+<p>Podemos ver que ao longo do tempo a quantidade de registros de ocorrência vem aumentando.</p>
 
-    
-![png](\img\posts\analise-rj\output_36_0.png)
-    
+<h2 id="conclusão">Conclusão</h2>
 
+<p>Com essa análise podemos concluir que:</p>
 
-Podemos ver que em quase 70 meses tivemos em torno de 500 a 550 registros de homicídos dolosos.
-
-
-```python
-df.registro_ocorrencias.plot();
-plt.ylabel('Registros de Ocorrência');
-```
-
-
-    
-![png](\img\posts\analise-rj\output_38_0.png)
-    
-
-
-Podemos ver que ao longo do tempo a quantidade de registros de ocorrência vem aumentando.
-
-## Conclusão
-
-Com essa análise podemos concluir que:
-
-* Há uma média de 4.123 veículos perdidos por mês.
-* Cerca de 1.772 veículos são recuperados por mês.
-* 42.98% dos veículos roubados ou furtados são recuperados.
-* A maior média de registros é do tipo furto, com média de 10.433 registros.
-* A menor média de registros é de policias civis mortos em serviço, com 0.34 registros.
-* A quantidade de Registros de Ocorrência vem aumentando com o tempo.
+<ul>
+  <li>Há uma média de 4.123 veículos perdidos por mês.</li>
+  <li>Cerca de 1.772 veículos são recuperados por mês.</li>
+  <li>42.98% dos veículos roubados ou furtados são recuperados.</li>
+  <li>A maior média de registros é do tipo furto, com média de 10.433 registros.</li>
+  <li>A menor média de registros é de policias civis mortos em serviço, com 0.34 registros.</li>
+  <li>A quantidade de Registros de Ocorrência vem aumentando com o tempo.</li>
+</ul>
+:ET

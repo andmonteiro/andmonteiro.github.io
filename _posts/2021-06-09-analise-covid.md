@@ -130,7 +130,7 @@ df.head()
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -385,7 +385,7 @@ df.tail()
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1063,7 +1063,7 @@ df_brasil.head()
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1319,7 +1319,7 @@ df_brasil.loc[df_brasil.total_cases == 1.0].sort_values(by='date').head(1)
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1429,7 +1429,7 @@ df_brasil.loc[df_brasil.total_deaths == 1.0].sort_values(by='date').head(1)
 
 
 
-<div>
+<div style="overflow-y: scroll; height:auto; overflow-x: scroll; width:auto;">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
