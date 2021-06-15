@@ -1,10 +1,9 @@
 ---
 layout: post
-title: "Análise dos Dados do Airbnb"
+title: "Análise dos Dados do Airbnb em Portugal"
 subtitle: "Neste notebook, iremos analisar os dados referentes ao Distrito de Lisboa, e ver quais insights podem ser extraídos a partir de dados brutos."
 background: '/img/posts/analise-airbnb/analise-airbnb.jpeg'
 ---
-# Análise dos Dados do Airbnb - *Lisboa, Portugal*
 
 
 O [Airbnb](https://www.airbnb.com.br/) já é considerado como sendo a **maior empresa hoteleira da atualidade**. O detalhe é que ele **não possui nenhum hotel**!
