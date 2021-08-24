@@ -1061,7 +1061,7 @@ Nós balanceamos os dados, com 369 entradas para cada classe. Vamos verificar a 
 corr = X_train.corr()
 corr_rus = pd.DataFrame(X_rus).corr()
 
-fig, ax = plt.subplots(nrows=1, ncols=2, figsize = (19,9))
+fig, ax = plt.subplots(figsize = (9,7))
 fig.suptitle('Matriz de Correlação')
 
 sns.heatmap(corr_rus, xticklabels=corr.columns, yticklabels=corr.columns,
